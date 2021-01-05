@@ -2,7 +2,7 @@
 
 ## Toolkit
 
-This is our version of [PSAppDeployToolKit](https://github.com/PSAppDeployToolkit/PSAppDeployToolkit/releases). It's the same toolkit but with some extra features!
+This is our version of [PSAppDeployToolKit](https://github.com/PSAppDeployToolkit/PSAppDeployToolkit). It's the same toolkit but with some extra features!
 
 ### Setup
 
