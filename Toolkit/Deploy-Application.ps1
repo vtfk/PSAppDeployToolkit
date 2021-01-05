@@ -216,7 +216,7 @@ Try {
 		#$currentIP = Get-ClientIPSegment
 		
 		# uninstall VC++ 2015,2017,2019,2015_2019 x86_x64 - (WORKAROUND TO ALLOW SHITTY APPS TO INSTALL AN APP-REQUIRED OLDER VC++ THAN ALREADY INSTALLED.....)
-		[bool]$allowShittyApps = $True
+		[bool]$allowShittyApps = $False
 
         #endregion
 
@@ -355,9 +355,6 @@ Try {
         Start-CustomUninstall
 
 		#endregion
-
-		$currentIP = Get-ClientIPSegment
-		Write-Log -Message "ClienIP: $currentIP" -Severity 1 -Source "Deploy-Application.ps1" -ScriptSection "Njet" -LogType CMTrace
 		
 		# wait for uninstall to finish
 		#Wait-ForProgramToFinish -ProcessName "_uninstall*"
