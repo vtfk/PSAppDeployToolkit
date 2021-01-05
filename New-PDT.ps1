@@ -19,8 +19,8 @@ $settings = @{
         FallbackProgramDisplayName = "PowerShell ISE"
     }
     OutputFolder = "$env:USERPROFILE\Desktop"
-    ToolkitPath = "D:\SCRIPTS\Common Windows Installer Wrapper"
-    LogPath = "D:\SCRIPTS\Common Windows Installer Wrapper usage.xlsx"
+    ToolkitPath = "Local-Or-UNC-Path-To-Folder-Containing-Toolkit"
+    LogPath = "Local-Or-UNC-Path-To-Log-File-As-.xlsx-or-.csv" # If set to .xlsx, PowerShell module "Import-Excel" must be installed. If set to .csv, "Export-CSV" will be used. Otherwise normal file logging will be used
 }
 
 # get variables
