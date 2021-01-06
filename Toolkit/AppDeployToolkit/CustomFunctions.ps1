@@ -41,7 +41,7 @@ Function Get-FileName
         [switch]$FullPath
     )
 
-    $file = Get-ChildItem -Path $Path -Filter $Filter | Select -ExpandProperty VersionInfo | Select -ExpandProperty FileName
+    $file = Get-ChildItem -Path $Path -Filter $Filter -File | Select -ExpandProperty FullName
     if (!$file)
     {
         Write-Log -Message "'$Filter' not found in '$Path'" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
