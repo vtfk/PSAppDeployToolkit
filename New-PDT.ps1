@@ -1,4 +1,41 @@
-﻿# remove any variables still existing
+﻿Function New-LogItem
+{
+    param(
+        [Parameter(Mandatory = $True)]
+        $LogItem
+    )
+
+    if ([string]::IsNullOrEmpty($settings.LogPath))
+    {
+        # logging is disabled
+        return;
+    }
+
+    if ($settings.LogPath.EndsWith(".xlsx"))
+    {
+        # logging to Excel
+        if (!(Get-Module ImportExcel -ListAvailable))
+        {
+            # ImportExcel module not found. Logging disabled
+            Write-Error "Module 'ImportExcel' not found. Logging disabled" -ErrorAction Continue
+            return;
+        }
+
+        $LogItem | Export-Excel -Path $settings.LogPath -Append -AutoSize -TableName "Usage" -TableStyle Medium1
+    }
+    elseif ($settings.LogPath.EndsWith(".csv"))
+    {
+        # logging to csv
+        $LogItem | Export-Csv -Path $settings.LogPath -Encoding UTF8 -Append -Delimiter ';' -NoTypeInformation
+    }
+    else
+    {
+        # logging to regular file
+        $LogItem | Out-String | Out-File -FilePath $settings.LogPath -Encoding utf8 -Append
+    }
+}
+
+# remove any variables still existing
 Clear-Variable -Name defaultVars -Force -Confirm:$False -ErrorAction SilentlyContinue -WarningAction Ignore
 
 # default variables
@@ -20,7 +57,7 @@ $settings = @{
     }
     OutputFolder = "$env:USERPROFILE\Desktop"
     ToolkitPath = "Local-Or-UNC-Path-To-Folder-Containing-Toolkit"
-    LogPath = "Local-Or-UNC-Path-To-Log-File-As-.xlsx-or-.csv" # If set to .xlsx, PowerShell module "ImportExcel" must be installed. If set to .csv, "Export-CSV" will be used. Otherwise normal file logging will be used
+    LogPath = "Local-Or-UNC-Path-To-Log-File-As-.xlsx-,-.csv-or-anythingotherextension" # Set to a empty string to disable logging. If set to .xlsx, PowerShell module "ImportExcel" must be installed. If set to .csv, "Export-CSV" will be used. Otherwise normal file logging will be used
 }
 
 # get variables
@@ -108,7 +145,7 @@ if ($settings.OpenPDT.Active)
     {
         Start-Process -FilePath $settings.OpenPDT.Program -ArgumentList $outputPath -NoNewWindow -ErrorAction Stop
         Write-Host "Launched" -ForegroundColor Green
-        New-Object PSObject -Property @{ Date = (Get-Date -Format 'dd.MM.yyyy HH:mm:ss'); User = $env:USERNAME; FolderName = $folderName; Vendor = $pdtVendor; Name = $pdtName; Version = $pdtVersion; Architecture = $pdtArch; Author = $pdtAuthor; Code = "Launched '$($settings.OpenPDT.ProgramDisplayName)'" } | Select Date, User, FolderName, Vendor, Name, Version, Architecture, Author, Code | Export-Excel -Path $settings.LogPath -Append -AutoSize -TableName "Usage" -TableStyle Medium1
+        New-LogItem -LogItem (New-Object PSObject -Property @{ Date = (Get-Date -Format 'dd.MM.yyyy HH:mm:ss'); User = $env:USERNAME; FolderName = $folderName; Vendor = $pdtVendor; Name = $pdtName; Version = $pdtVersion; Architecture = $pdtArch; Author = $pdtAuthor; Code = "Launched '$($settings.OpenPDT.ProgramDisplayName)'" } | Select Date, User, FolderName, Vendor, Name, Version, Architecture, Author, Code)
     }
     catch
     {
@@ -123,11 +160,11 @@ if ($settings.OpenPDT.Active)
             {
                 Start-Process -FilePath $settings.OpenPDT.FallbackProgram -ArgumentList $outputPath -ErrorAction Stop
                 Write-Host "Launched" -ForegroundColor Green
-                New-Object PSObject -Property @{ Date = (Get-Date -Format 'dd.MM.yyyy HH:mm:ss'); User = $env:USERNAME; FolderName = $folderName; Vendor = $pdtVendor; Name = $pdtName; Version = $pdtVersion; Architecture = $pdtArch; Author = $pdtAuthor; Code = "Launched '$($settings.OpenPDT.FallbackProgramDisplayName)'" } | Select Date, User, FolderName, Vendor, Name, Version, Architecture, Author, Code | Export-Excel -Path $settings.LogPath -Append -AutoSize -TableName "Usage" -TableStyle Medium1
+                New-LogItem -LogItem (New-Object PSObject -Property @{ Date = (Get-Date -Format 'dd.MM.yyyy HH:mm:ss'); User = $env:USERNAME; FolderName = $folderName; Vendor = $pdtVendor; Name = $pdtName; Version = $pdtVersion; Architecture = $pdtArch; Author = $pdtAuthor; Code = "Launched '$($settings.OpenPDT.FallbackProgramDisplayName)'" } | Select Date, User, FolderName, Vendor, Name, Version, Architecture, Author, Code)
             }
             catch
             {
-                New-Object PSObject -Property @{ Date = (Get-Date -Format 'dd.MM.yyyy HH:mm:ss'); User = $env:USERNAME; FolderName = $folderName; Vendor = $pdtVendor; Name = $pdtName; Version = $pdtVersion; Architecture = $pdtArch; Author = $pdtAuthor; Code = "Failed '$($settings.OpenPDT.ProgramDisplayName)': $codeError ::: Failed '$($settings.OpenPDT.FallbackProgramDisplayName)': $_" } | Select Date, User, FolderName, Vendor, Name, Version, Architecture, Author, Code | Export-Excel -Path $settings.LogPath -Append -AutoSize -TableName "Usage" -TableStyle Medium1
+                New-LogItem -LogItem (New-Object PSObject -Property @{ Date = (Get-Date -Format 'dd.MM.yyyy HH:mm:ss'); User = $env:USERNAME; FolderName = $folderName; Vendor = $pdtVendor; Name = $pdtName; Version = $pdtVersion; Architecture = $pdtArch; Author = $pdtAuthor; Code = "Failed '$($settings.OpenPDT.ProgramDisplayName)': $codeError ::: Failed '$($settings.OpenPDT.FallbackProgramDisplayName)': $_" } | Select Date, User, FolderName, Vendor, Name, Version, Architecture, Author, Code)
                 Write-Host "Failed: $_" -ForegroundColor Red
                 Start-Sleep -Seconds 3
             }
@@ -136,5 +173,5 @@ if ($settings.OpenPDT.Active)
 }
 else
 {
-    New-Object PSObject -Property @{ Date = (Get-Date -Format 'dd.MM.yyyy HH:mm:ss'); User = $env:USERNAME; FolderName = $folderName; Vendor = $pdtVendor; Name = $pdtName; Version = $pdtVersion; Architecture = $pdtArch; Author = $pdtAuthor; Code = "Launch deactivated" } | Select Date, User, FolderName, Vendor, Name, Version, Architecture, Author, Code | Export-Excel -Path $settings.LogPath -Append -AutoSize -TableName "Usage" -TableStyle Medium1
+    New-LogItem -LogItem (New-Object PSObject -Property @{ Date = (Get-Date -Format 'dd.MM.yyyy HH:mm:ss'); User = $env:USERNAME; FolderName = $folderName; Vendor = $pdtVendor; Name = $pdtName; Version = $pdtVersion; Architecture = $pdtArch; Author = $pdtAuthor; Code = "Launch deactivated" } | Select Date, User, FolderName, Vendor, Name, Version, Architecture, Author, Code)
 }
