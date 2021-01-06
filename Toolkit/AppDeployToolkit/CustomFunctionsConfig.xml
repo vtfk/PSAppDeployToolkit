@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <CustomExtensions>
-    <!-- UNC path to the folder containing all the VC++ installation files. If not set, $allowShittyApps will uninstall VC++ but not install VC++ again at the end! Leaving the client in an unwanted state... -->
+    <!-- UNC path to the folder containing all the VC++ installation files. Path must be reachable from the client. If not set, or set to a non-existing path, '$allowShittyApps = $True' in Deploy-Application.ps1 will not do anything! -->
     <VisualStudioPlusPlusPath>\\path\to\where\VC++\install\files\are</VisualStudioPlusPlusPath>
     <!-- Used in Get-ClientIPSegment to only return gateway from network cards with these IPSegements -->
     <IPSegments>

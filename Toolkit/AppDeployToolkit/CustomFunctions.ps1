@@ -739,6 +739,17 @@ Function Uninstall-VCRedistributable
 # uninstall VC++ 2015,2017,2019,2015_2019 x86_x64
 Function Start-VCUninstall
 {
+    if ([string]::IsNullOrEmpty($CustomConfig.CustomExtensions.VisualStudioPlusPlusPath))
+    {
+        Write-Log -Message "'VisualStudioPlusPlusPath' is not defined or is set to an empty value in 'CustomFunctionsConfig.xml'" -Severity 3 -Source "CustomFunctions.ps1" -ScriptSection "Start-VCUninstall" -LogType CMTrace
+        return $False
+    }
+    elseif (!(Test-Path -Path $CustomConfig.CustomExtensions.VisualStudioPlusPlusPath))
+    {
+        Write-Log -Message "'VisualStudioPlusPlusPath' defined in 'CustomFunctionsConfig.xml' does not exist or is not reachable!" -Severity 3 -Source "CustomFunctions.ps1" -ScriptSection "Start-VCUninstall" -LogType CMTrace
+        return $False
+    }
+
     $uninstallPaths = @("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall")
     $uninstallItems = @()
 

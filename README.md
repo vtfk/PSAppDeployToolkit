@@ -18,6 +18,7 @@ This is our version of [PSAppDeployToolKit](https://github.com/PSAppDeployToolki
 1. Open `Toolkit\Deploy-Application.ps1`
 1. Installation
     1. In the section `## <Perform Pre-Installation tasks here>`, in the hash table `$customInstall`, update each hash table with info for the setup file(s) you want to install.
+    1. If you're installing a file that demands to install a specific version of VC++ which is lower than what you currently have installed. You can set `$allowShittyApps` to `$True`. This will uninstall VC++ versions from 2015 an newer before installing your file and install the VC++ files specified in the [VisualStudioPlusPlusPath](https://github.com/vtfk/PSAppDeployToolkit#setup) after your file is installed
 1. Uninstallation
     1. In the section `## <Perform Pre-Uninstallation tasks here>`, in the hash table `$customUninstall`, update each hash table with info for the setup file or msi guid you want to uninstall.
 
