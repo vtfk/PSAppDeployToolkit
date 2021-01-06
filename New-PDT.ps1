@@ -11,7 +11,7 @@
         return;
     }
 
-    if ($settings.LogPath.EndsWith(".xlsx"))
+    if ($settings.LogPath.ToLower().EndsWith(".xlsx"))
     {
         # logging to Excel
         if (!(Get-Module ImportExcel -ListAvailable))
@@ -23,7 +23,7 @@
 
         $LogItem | Export-Excel -Path $settings.LogPath -Append -AutoSize -TableName "Usage" -TableStyle Medium1
     }
-    elseif ($settings.LogPath.EndsWith(".csv"))
+    elseif ($settings.LogPath.ToLower().EndsWith(".csv"))
     {
         # logging to csv
         $LogItem | Export-Csv -Path $settings.LogPath -Encoding UTF8 -Append -Delimiter ';' -NoTypeInformation
