@@ -17,7 +17,7 @@ This is our version of [PSAppDeployToolKit](https://github.com/PSAppDeployToolki
 1. Add setup file(s) in the `Files` folder
 1. Open `Toolkit\Deploy-Application.ps1`
 1. Installation
-    1. In the section `## <Perform Pre-Installation tasks here>`, in the hash table `$customInstall`, update each hash table with info for the setup file you want to install. 
+    1. In the section `## <Perform Pre-Installation tasks here>`, in the hash table `$customInstall`, update each hash table with info for the setup file(s) you want to install.
 1. Uninstallation
     1. In the section `## <Perform Pre-Uninstallation tasks here>`, in the hash table `$customUninstall`, update each hash table with info for the setup file or msi guid you want to uninstall.
 

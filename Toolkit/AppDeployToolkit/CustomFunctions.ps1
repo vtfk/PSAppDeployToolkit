@@ -101,36 +101,34 @@ Function Get-ClientIPSegment
 {
     ## GET CLIENT GATEWAY IP SEGMENT
     $IPAddresses = Get-WmiObject Win32_NetworkAdapterConfiguration | Where { $ipAddr = $_.IpAddress; $_.IpEnabled -eq $True -and ($CustomConfig.CustomExtensions.IPSegments.IPSegment | Where { $ipAddr -like $_ }) } | Select IPAddress
-    if ($IPAddresses -ne $null)
+    if ($null -eq $IPAddresses)
     {
-        if ($IPAddresses.Count -ne $null)
-        {
-            Write-Log -Message "Found $($IPAddresses.Count) adapters with IP like '$($CustomConfig.CustomExtensions.IPSegments.IPSegment -join "' or '")' :" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace"
-            foreach ($IPA in $IPAddresses)
-            {
-                Write-Log -Message "- $($IPA.IPAddress)" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace"
-            }
-            [string]$IPAddress = $IPAddresses[0].IPAddress
-            Write-Log -Message "Using IPAddress '$IPAddress'" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace"
-            [string]$GatewayIP = $IPAddress.Substring(3, 3)
-            Write-Log -Message "Found IP segment '$GatewayIP'" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace"
+        Write-Log -Message "This machine is not connected to any of the given networks!" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace" -WriteHost $True
+        return -1
+    }
 
-            return $GatewayIP
-        }
-        else
+    if ($null -ne $IPAddresses.Count)
+    {
+        Write-Log -Message "Found $($IPAddresses.Count) adapters with IP like '$($CustomConfig.CustomExtensions.IPSegments.IPSegment -join "' or '")' :" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace"
+        foreach ($IPA in $IPAddresses)
         {
-            [string]$IPAddress = $IPAddresses.IPAddress
-            Write-Log -Message "Using IPAddress '$IPAddress'" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace"
-            [string]$GatewayIP = $IPAddress.Substring(3, 3)
-            Write-Log -Message "Found IP segment '$GatewayIP'" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace"
-
-            return $GatewayIP
+            Write-Log -Message "- $($IPA.IPAddress)" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace"
         }
+        [string]$IPAddress = $IPAddresses[0].IPAddress
+        Write-Log -Message "Using IPAddress '$IPAddress'" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace"
+        [string]$GatewayIP = $IPAddress.Substring(3, 3)
+        Write-Log -Message "Found IP segment '$GatewayIP'" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace"
+
+        return $GatewayIP
     }
     else
     {
-        Write-Log -Message "This machine is not connected to any of the given networks!" -Severity 3 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace" -WriteHost $True
-        Exit-Script -ExitCode -1
+        [string]$IPAddress = $IPAddresses.IPAddress
+        Write-Log -Message "Using IPAddress '$IPAddress'" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace"
+        [string]$GatewayIP = $IPAddress.Substring(3, 3)
+        Write-Log -Message "Found IP segment '$GatewayIP'" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-ClientIPSegment" -LogType "CMTrace"
+
+        return $GatewayIP
     }
 }
 

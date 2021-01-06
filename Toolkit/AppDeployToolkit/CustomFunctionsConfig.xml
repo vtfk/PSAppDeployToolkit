@@ -2,7 +2,7 @@
 <CustomExtensions>
     <!-- UNC path to the folder containing all the VC++ installation files. If not set, $allowShittyApps will uninstall VC++ but not install VC++ again at the end! Leaving the client in an unwanted state... -->
     <VisualStudioPlusPlusPath>\\path\to\where\VC++\install\files\are</VisualStudioPlusPlusPath>
-    <!-- Used in Get-ClientIPSegment to verify that the machine running the Toolkit is connected to one of these IPSegements. If no segments defind, Get-ClientIPSegment will fail -->
+    <!-- Used in Get-ClientIPSegment to only return gateway from network cards with these IPSegements -->
     <IPSegments>
         <IPSegment>192.168.*</IPSegment>
     </IPSegments>
