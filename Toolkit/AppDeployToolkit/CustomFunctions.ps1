@@ -44,10 +44,10 @@ Function Get-FileName
     $file = Get-ChildItem -Path $Path -Filter $Filter -File | Select -ExpandProperty FullName
     if (!$file)
     {
-        Write-Log -Message "'$Filter' not found in '$Path'" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
         if ($Path.StartsWith($dirFiles))
         {
             # maybe it exists in $dirSupportFiles :(
+            Write-Log -Message "'$Filter' not found in '$Path'" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
             $Path = $Path.Replace($dirFiles, $dirSupportFiles)
             Write-Log -Message "Will try to find '$Filter' in '$dirSupportFiles'" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
             $file = Get-ChildItem -Path $Path -Filter $Filter | Select -ExpandProperty VersionInfo | Select -ExpandProperty FileName
@@ -55,13 +55,10 @@ Function Get-FileName
         elseif ($Path.StartsWith($dirSupportFiles))
         {
             # maybe it exists in $dirFiles :)
+            Write-Log -Message "'$Filter' not found in '$Path'" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
             $Path = $Path.Replace($dirSupportFiles, $dirFiles)
             Write-Log -Message "Will try to find '$Filter' in '$dirFiles'" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
             $file = Get-ChildItem -Path $Path -Filter $Filter | Select -ExpandProperty VersionInfo | Select -ExpandProperty FileName
-        }
-        else
-        {
-            Write-Log -Message "This is a custom path" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
         }
     }
 
