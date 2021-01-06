@@ -20,7 +20,7 @@ $settings = @{
     }
     OutputFolder = "$env:USERPROFILE\Desktop"
     ToolkitPath = "Local-Or-UNC-Path-To-Folder-Containing-Toolkit"
-    LogPath = "Local-Or-UNC-Path-To-Log-File-As-.xlsx-or-.csv" # If set to .xlsx, PowerShell module "Import-Excel" must be installed. If set to .csv, "Export-CSV" will be used. Otherwise normal file logging will be used
+    LogPath = "Local-Or-UNC-Path-To-Log-File-As-.xlsx-or-.csv" # If set to .xlsx, PowerShell module "ImportExcel" must be installed. If set to .csv, "Export-CSV" will be used. Otherwise normal file logging will be used
 }
 
 # get variables
