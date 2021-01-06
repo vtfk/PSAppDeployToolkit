@@ -44,33 +44,37 @@ Function Get-FileName
     $file = Get-ChildItem -Path $Path -Filter $Filter | Select -ExpandProperty VersionInfo | Select -ExpandProperty FileName
     if (!$file)
     {
-        Write-Log -Message "'$Filter' not found in '$Path' ($file)" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
+        Write-Log -Message "'$Filter' not found in '$Path'" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
         if ($Path.StartsWith($dirFiles))
         {
             # maybe it exists in $dirSupportFiles :(
             $Path = $Path.Replace($dirFiles, $dirSupportFiles)
-            Write-Log -Message "Will try to find '$Filter' in 'SupportFiles'" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
+            Write-Log -Message "Will try to find '$Filter' in '$dirSupportFiles'" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
             $file = Get-ChildItem -Path $Path -Filter $Filter | Select -ExpandProperty VersionInfo | Select -ExpandProperty FileName
         }
         elseif ($Path.StartsWith($dirSupportFiles))
         {
             # maybe it exists in $dirFiles :)
             $Path = $Path.Replace($dirSupportFiles, $dirFiles)
-            Write-Log -Message "Will try to find '$Filter' in 'Files'" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
+            Write-Log -Message "Will try to find '$Filter' in '$dirFiles'" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
             $file = Get-ChildItem -Path $Path -Filter $Filter | Select -ExpandProperty VersionInfo | Select -ExpandProperty FileName
+        }
+        else
+        {
+            Write-Log -Message "This is a custom path" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
         }
     }
 
     if (!$file)
     {
-        Write-Log -Message "'$Filter' not found in '$Path' ($file)" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
+        Write-Log -Message "'$Filter' not found in '$Path'" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
         return ""
     }
     else
     {
         if ($file.Count -le 0 -or $file.Count -gt 1)
         {
-            Write-Log -Message "Using '$Filter' in '$Path' : $($file.Count) items found. Give a more specific filter" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
+            Write-Log -Message "'$Filter' in '$Path' : $($file.Count) items found ('$($file -join "', '")'). Give a more specific filter" -Severity 2 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
             return ""
         }
         else
@@ -87,6 +91,7 @@ Function Get-FileName
             $file = [System.IO.Path]::GetFileName($file)
             Write-Log -Message "Returning file name only : '$file'" -Severity 1 -Source "CustomFunctions.ps1" -ScriptSection "Get-FileName" -LogType CMTrace
         }
+
         return $file
     }
 }
