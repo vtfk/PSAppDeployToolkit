@@ -67,7 +67,7 @@ If Filter is found in `$dirFiles` it will not check in `$dirSupportFiles`and vic
 
 Will return the gateway octet from client ip address IF client ip matches the IP segment(s) set in [`CustomFunctionsConfig.xml`](https://github.com/vtfk/PSAppDeployToolkit#setup).
 
-If IP segment(s) is not setup in `CustomFunctionsConfig.xml` or client doesn't have any matching ip address, this function will fail.
+If IP segment(s) is not setup in `CustomFunctionsConfig.xml` or client doesn't have any matching ip address, this function will return -1.
 
 ### Get-InstallationBehavior
 
