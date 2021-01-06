@@ -5,6 +5,7 @@
 # Check if required process is running and close it if it's running
 Function Stop-RequiredProcess
 {
+    ## ExtensionAppDeployScript
     param(
         [Parameter(Mandatory = $True)]
         [string[]]$Process
@@ -28,6 +29,7 @@ Function Stop-RequiredProcess
 # Get filename based on a filter: "*.msi", "*.mst", "*.msp", "*.exe" and so forth from $dirFiles or $dirSupportFiles or specified location.
 Function Get-FileName
 {
+    ## ExtensionAppDeployScript
     param (
         [Parameter(Mandatory = $True)]
         [ValidateNotNullOrEmpty()]
@@ -96,6 +98,7 @@ Function Get-FileName
 # Get second octet of IP Address
 Function Get-ClientIPSegment
 {
+    ## ExtensionAppDeployScript
     ## GET CLIENT GATEWAY IP SEGMENT
     $IPAddresses = Get-WmiObject Win32_NetworkAdapterConfiguration | Where { $ipAddr = $_.IpAddress; $_.IpEnabled -eq $True -and ($CustomConfig.CustomExtensions.IPSegments.IPSegment | Where { $ipAddr -like $_ }) } | Select IPAddress
     if ($null -eq $IPAddresses)
@@ -138,6 +141,7 @@ Function Get-ClientIPSegment
 #>
 Function Get-InstallationBehavior
 {
+    ## ExtensionAppDeployScript
     param(
         [Parameter(Mandatory = $True)]
         [ValidateSet("System", "User")]
@@ -164,6 +168,7 @@ Function Get-InstallationBehavior
 # Custom install based on arguments given in Deploy-Application.ps1
 Function Start-CustomInstall
 {
+    ## ExtensionAppDeployScript
     if (!$customInstall -or !$customInstall.Count -or $customInstall.Count -le 1 -or $customInstall[0].GetType().Name -ne "Object[]" -or $customInstall[1].GetType().Name -ne "Hashtable") {
         Write-Log -Message "Required variable 'customInstall' missing or invalid configured. Read the comments in Deploy-Application.ps1" -Severity 3 -Source "CustomFunctions.ps1" -ScriptSection "Start-CustomInstall" -LogType CMTrace
         Exit-Script -ExitCode 60070
@@ -183,6 +188,7 @@ Function Start-CustomInstall
 # Custom uninstall based on arguments given in Deploy-Application.ps1
 Function Start-CustomUninstall
 {
+    ## ExtensionAppDeployScript
     if (!$customUninstall -or !$customUninstall.Count -or $customUninstall.Count -le 1 -or $customUninstall[0].GetType().Name -ne "Object[]" -or $customUninstall[1].GetType().Name -ne "Hashtable") {
         Write-Log -Message "Required variable 'customUninstall' missing or invalid configured. Read the comments in Deploy-Application.ps1" -Severity 3 -Source "CustomFunctions.ps1" -ScriptSection "Start-CustomUninstall" -LogType CMTrace
         Exit-Script -ExitCode 60070
@@ -200,6 +206,7 @@ Function Start-CustomUninstall
 
 Function Start-CustomMsi
 {
+    ## ExtensionAppDeployScript
     param(
         [Parameter(Mandatory = $True)]
         $Obj,
@@ -341,6 +348,7 @@ Function Start-CustomMsi
 
 Function Start-CustomMsp
 {
+    ## ExtensionAppDeployScript
     param(
         [Parameter(Mandatory = $True)]
         $Obj
@@ -407,6 +415,7 @@ Function Start-CustomMsp
 
 Function Start-CustomExe
 {
+    ## ExtensionAppDeployScript
     param(
         [Parameter(Mandatory = $True)]
         $Obj,
@@ -573,6 +582,7 @@ Function Start-CustomExe
 # Wait for install/uninstall to be finished
 Function Wait-ForProgramToFinish
 {
+    ## ExtensionAppDeployScript
     param(
         [Parameter(Mandatory = $True)]
         [string]$ProcessName,
@@ -612,6 +622,7 @@ Function Wait-ForProgramToFinish
 # Wait x seconds for install/unintall to be finished
 Function Wait-TimeForProgramToFinish
 {
+    ## ExtensionAppDeployScript
     param(
         [Parameter()]
         [int]$Minutes = 1
@@ -626,6 +637,7 @@ Function Wait-TimeForProgramToFinish
 # Install certificate as a trusted publisher
 Function Start-CertificateInstallation
 {
+    ## ExtensionAppDeployScript
     param(
         [Parameter(Mandatory = $True)]
         [string]$Path,
@@ -659,6 +671,7 @@ Function Start-CertificateInstallation
 # Find VC++ redist to uninstall
 Function Find-VCUninstall
 {
+    ## ExtensionAppDeployScript
     param(
         [Parameter(Mandatory = $True)]
         [string]$Path,
@@ -717,6 +730,7 @@ Function Find-VCUninstall
 # Uninstall VC++ redist item found in Find-VCUninstall
 Function Uninstall-VCRedistributable
 {
+    ## ExtensionAppDeployScript
     param(
         [Parameter(Mandatory = $True, ValueFromPipeline = $True)]
         $UninstallItem
@@ -736,6 +750,7 @@ Function Uninstall-VCRedistributable
 # uninstall VC++ 2015,2017,2019,2015_2019 x86_x64
 Function Start-VCUninstall
 {
+    ## ExtensionAppDeployScript
     if ([string]::IsNullOrEmpty($CustomConfig.CustomExtensions.VisualStudioPlusPlusPath))
     {
         Write-Log -Message "'VisualStudioPlusPlusPath' is not defined or is set to an empty value in 'CustomFunctionsConfig.xml'" -Severity 3 -Source "CustomFunctions.ps1" -ScriptSection "Start-VCUninstall" -LogType CMTrace
@@ -771,6 +786,7 @@ Function Start-VCUninstall
 # install VC++ 2015-2019 x86_x64
 Function Start-VCInstall
 {
+    ## ExtensionAppDeployScript
     $folderPath = $CustomConfig.CustomExtensions.VisualStudioPlusPlusPath
 
     Get-ChildItem -Path $folderPath -Filter "*.exe" -File | % {
@@ -792,6 +808,7 @@ Function Start-VCInstall
 # Get MSI properties (Must be single quoted. Exmaple: "'ProductCode'")
 Function Get-MsiProperty
 {
+    ## ExtensionAppDeployScript
 	param(
         [Parameter(Mandatory = $True)]
         [string]$Path,
