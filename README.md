@@ -6,7 +6,7 @@ This is our version of [PSAppDeployToolKit](https://github.com/PSAppDeployToolki
 
 ### Setup
 
-- Download the latest [release](https://github.com/vtfk/PSAppDeployToolkit/releases)
+- Download the latest [release](https://github.com/vtfk/PSAppDeployToolkit/releases) `Source code (zip)`
 - Unzip the file
 - Open `Toolkit\AppDeployToolkit\CustomFunctionsConfig.xml` in your editor
     - Set `VisualStudioPlusPlusPath` to an UNC folder path containing your vc++ installation filen `(*.exe)` (no subfolders)
